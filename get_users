@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# (c) Kied Llaentenn (@kiedtl)
+# See the LICENSE for more information.
+
+since=0
+
+while true; do
+	printf "\033[1mrequesting\033[0m https://api.github.com/users?since=${since}\n"
+	data=$(curl -sSL "https://api.github.com/users?since=${since}&per_page=100")
+
+	users=$(echo "${data}" | jq "map(.login)")
+	users=${users##[}
+	users=${users%%]}
+
+	since=$(echo $data | jq ".[-1].id")
+
+	echo "${users}" | while IFS=",\n" read user; do
+		[ -z "${user}" ] && continue
+		name=${user#  \"}
+		name=${name%\",}
+		name=${name%%\"}
+
+		keys=$(curl -sSL https://github.com/${name}.keys)
+		id=$(echo ${data} | jq ".[] | select(.login==\"${name}\") | .id")
+
+		printf "\r\033[1minserting\033[0m '${name}' of id '${id}'"
+		sqlite3 ./users "insert into users values ( \"${name}\", \"${keys}\", ${id}, \"\" );"
+	done
+
+	printf "\033[1A"
+done
