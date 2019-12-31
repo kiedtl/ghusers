@@ -1,2 +1,5 @@
 # the database
 users
+
+# vim's swap files
+**/*.*.swp
