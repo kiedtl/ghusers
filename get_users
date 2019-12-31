@@ -1,5 +1,6 @@
 #!/bin/sh
 #
+# get_users: populate the users
 # (c) Kied Llaentenn (@kiedtl)
 # See the LICENSE for more information.
 
@@ -21,11 +22,10 @@ while true; do
 		name=${name%\",}
 		name=${name%%\"}
 
-		keys=$(curl -sSL https://github.com/${name}.keys)
 		id=$(echo ${data} | jq ".[] | select(.login==\"${name}\") | .id")
 
 		printf "\r\033[1minserting\033[0m '${name}' of id '${id}'"
-		sqlite3 ./users "insert into users values ( \"${name}\", \"${keys}\", ${id}, \"\" );"
+		sqlite3 ./users "insert into users values ( \"${name}\", \"\", ${id}, \"\" );"
 	done
 
 	printf "\033[1A"
