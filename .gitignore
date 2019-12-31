@@ -1,5 +1,8 @@
 # the database
 users
 
+# oauth toke
+oauth
+
 # vim's swap files
 **/*.*.swp

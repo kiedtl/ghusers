@@ -4,11 +4,12 @@
 # (c) Kied Llaentenn (@kiedtl)
 # See the LICENSE for more information.
 
-since=0
+oauth="$(cat oauth)"
+since=$(sqlite3 ./users "select id from users order by id desc limit 1")
 
 while true; do
 	printf "\033[1mrequesting\033[0m https://api.github.com/users?since=${since}\n"
-	data=$(curl -sSL "https://api.github.com/users?since=${since}&per_page=100")
+	data=$(curl -H "Authorization: token ${oauth}" -sSL "https://api.github.com/users?since=${since}&per_page=100")
 
 	users=$(echo "${data}" | jq "map(.login)")
 	users=${users##[}
