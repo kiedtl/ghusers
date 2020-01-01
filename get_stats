@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# get_stats - get last id of users
+# (c) Kied Llaentenn (@kiedtl)
+# See the LICENSE for more information.
+
+main() {
+	sqlite3 ./users "select id from users order by id desc limit 1"
+}
+
+main "$@"
+
