@@ -5,7 +5,8 @@
 # See the LICENSE for more information.
 
 main() {
-	sqlite3 ./users "select id from users order by id desc limit 1"
+	printf "\033[1mnumber of users:\033[0m "
+	sqlite3 ./users "select count(id) from users;"
 }
 
 main "$@"

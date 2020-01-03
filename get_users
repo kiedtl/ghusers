@@ -9,7 +9,7 @@ since=$(sqlite3 ./users "select id from users order by id desc limit 1")
 
 while true; do
 	printf "\033[1mrequesting\033[0m https://api.github.com/users?since=${since}\n"
-	data=$(curl -H "Authorization: token ${oauth}" -sSL "https://api.github.com/users?since=${since}&per_page=100")
+	data=$(curl -H "Authorization: token ${oauth}" -sSL "https://api.github.com/users?since=${since}&per_page=100") || exit 1
 
 	users=$(echo "${data}" | jq "map(.login)")
 	users=${users##[}
@@ -29,5 +29,5 @@ while true; do
 		sqlite3 ./users "insert into users values ( \"${name}\", \"\", ${id}, \"\" );"
 	done
 
-	printf "\033[1A"
+	clear && printf "\033[1A"
 done
